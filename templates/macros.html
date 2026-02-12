@@ -1,0 +1,107 @@
+{% macro crud_modal(id, title, action_url, method='POST', size='') %}
+<div class="modal fade" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
+  <div class="modal-dialog {{ size }}">
+    <div class="modal-content">
+      <form action="{{ action_url }}" method="{{ method }}" class="modal-form">
+        <div class="modal-header">
+          <h5 class="modal-title" id="{{ id }}Label">
+            {{ title }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ caller() }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i>
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro delete_modal(id, title, message, action_url) %}
+<div class="modal fade" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ action_url }}" method="POST" class="modal-form">
+        <div class="modal-header">
+          <h5 class="modal-title" id="{{ id }}Label">
+            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+            {{ title }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">{{ message }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt me-1"></i>
+            Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro form_group(field) %}
+<div class="form-group mb-3">
+  {{ field.label(class="form-label") }}
+  {% if field.type == 'TextAreaField' %}
+    {{ field(class="form-control", rows="3")|safe }}
+  {% else %}
+    {{ field(class="form-control")|safe }}
+  {% endif %}
+  {% if field.errors %}
+    <div class="invalid-feedback d-block">
+      {% for error in field.errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro action_button(icon, text, href="#", classes="", tooltip="") %}
+<a href="{{ href }}" 
+   class="btn {{ classes }}" 
+   {% if tooltip %}
+   data-bs-toggle="tooltip" 
+   data-bs-placement="top" 
+   title="{{ tooltip }}"
+   {% endif %}>
+  <i class="{{ icon }} me-1"></i>
+  {{ text }}
+</a>
+{% endmacro %}
+
+{% macro card(title="", subtitle="", classes="") %}
+<div class="card {{ classes }}">
+  {% if title %}
+    <div class="card-header">
+      <h5 class="card-title mb-0">{{ title }}</h5>
+      {% if subtitle %}
+        <h6 class="card-subtitle text-muted">{{ subtitle }}</h6>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="card-body">
+    {{ caller() }}
+  </div>
+</div>
+{% endmacro %}

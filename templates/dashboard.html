@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - TripMates{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Welcome back, {{ current_user.name }} 👋</h2>
+    <p class="text-muted small">Here's a snapshot of your upcoming trips and groups.</p>
+  </div>
+  <div>
+    <a class="btn btn-outline-primary me-2" href="{{ url_for('create_trip') }}">Create Trip</a>
+    <a class="btn btn-primary" href="{{ url_for('groups') }}">Explore Groups</a>
+  </div>
+</div>
+
+<!-- Analytics cards -->
+<div class="row g-3 card-analytics mb-4">
+  <div class="col-12 col-md-3">
+    <div class="card p-3 card-hover">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="stat-number">{{ upcoming|length if upcoming is defined else 0 }}</div>
+          <div class="stat-label">Upcoming Trips</div>
+        </div>
+        <div><i class="bi bi-calendar-event fs-2 text-primary"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card p-3 card-hover">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="stat-number">{{ ongoing|length if ongoing is defined else 0 }}</div>
+          <div class="stat-label">Ongoing Trips</div>
+        </div>
+        <div><i class="bi bi-geo-alt fs-2 text-success"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card p-3 card-hover">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="stat-number">{{ completed|length if completed is defined else 0 }}</div>
+          <div class="stat-label">Completed Trips</div>
+        </div>
+        <div><i class="bi bi-check2-circle fs-2 text-muted"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-3">
+    <div class="card p-3 card-hover">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="stat-number">{{ my_groups|length if my_groups is defined else 0 }}</div>
+          <div class="stat-label">Groups</div>
+        </div>
+        <div><i class="bi bi-people fs-2 text-warning"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-4">
+    <div class="card p-3 mb-3">
+      <h5>My Groups <small class="text-muted">(click to open)</small></h5>
+      <div class="list-group group-list mt-2">
+        {% for g in my_groups %}
+        <div class="list-group-item">
+          <div>
+            <strong>{{ g.name }}</strong>
+            {% if g.admin_id == current_user.id %}
+            <span class="badge bg-success group-badge ms-2">Admin</span>
+            {% endif %}
+            <div class="small text-muted">{{ g.description or '' }}</div>
+          </div>
+          <div class="btn-group btn-group-sm">
+            <a href="{{ url_for('group_detail', group_id=g.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+          </div>
+        </div>
+        {% else %}
+        <div class="list-group-item text-muted">You are not a member of any groups yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card p-3">
+      <h5>Quick Tips</h5>
+      <ul class="small text-muted">
+        <li>Use Groups to plan trips with friends.</li>
+        <li>Track expenses per trip from the Expenses page.</li>
+        <li>Create itinerary items to plan your trip activities.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-8">
+    <div class="card p-3 mb-3">
+      <h5>Recent Trips</h5>
+      <div class="table-responsive">
+        <div class="row g-4">
+          {% for t in upcoming + ongoing + completed if (upcoming is defined and ongoing is defined and completed is
+          defined) %}
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 trip-card">
+              {% if t.cover_image %}
+              <img src="{{ url_for('static', filename=t.cover_image) }}" class="card-img-top" alt="{{ t.title }}"
+                style="height: 180px; object-fit: cover;">
+              {% else %}
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                style="height: 180px;">
+                <i class="fas fa-image text-muted fa-2x"></i>
+              </div>
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ t.title }}</h5>
+                {% if t.user_id != current_user.id %}
+                <span class="badge bg-info mb-2">
+                  <i class="fas fa-users me-1"></i>Shared Trip
+                </span>
+                {% endif %}
+                <div class="text-muted mb-2">
+                  <i class="fas fa-map-marker-alt me-1"></i>
+                  {{ t.destination }}
+                </div>
+                <div class="text-muted small mb-3">
+                  <i class="fas fa-calendar me-1"></i>
+                  {{ t.start_date.strftime('%b %d, %Y') }} — {{ t.end_date.strftime('%b %d, %Y') }}
+                </div>
+                <a href="{{ url_for('view_trip', trip_id=t.id) }}" class="btn btn-outline-primary btn-sm w-100">
+                  View Trip Details
+                </a>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="col-12">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>
+              No trips yet. Why not <a href="{{ url_for('create_trip') }}" class="alert-link">create one</a>?
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

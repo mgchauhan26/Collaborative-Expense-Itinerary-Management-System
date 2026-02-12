@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Itinerary Item - TripMates{% endblock %}
+
+{% block content %}
+<h2>Add Itinerary Item for {{ trip.title }}</h2>
+<div class="alert alert-info">
+  <i class="fas fa-info-circle"></i>
+  Trip dates: {{ trip.start_date.strftime('%Y-%m-%d') }} to {{ trip.end_date.strftime('%Y-%m-%d') }}
+</div>
+<form method="post" data-trip-start-date="{{ trip.start_date.strftime('%Y-%m-%d') }}"
+  data-trip-end-date="{{ trip.end_date.strftime('%Y-%m-%d') }}">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.title.label(class_='form-label') }}
+    {{ form.title(class_='form-control', required=True) }}
+    {% for error in form.title.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.description.label(class_='form-label') }}
+    {{ form.description(class_='form-control', rows=3, maxlength='500') }}
+    {% for error in form.description.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  </div>
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      {{ form.date.label(class_='form-label') }}
+      {{ form.date(class_='form-control', type='date', required=True, min=trip.start_date.strftime('%Y-%m-%d'),
+      max=trip.end_date.strftime('%Y-%m-%d')) }}
+      {% for error in form.date.errors %}
+      <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.time.label(class_='form-label') }}
+      {{ form.time(class_='form-control') }}
+      {% for error in form.time.errors %}
+      <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.location.label(class_='form-label') }}
+      {{ form.location(class_='form-control') }}
+    </div>
+    <div class="col-md-3 mb-3">
+      {{ form.cost.label(class_='form-label') }}
+      {{ form.cost(class_='form-control', placeholder='e.g. 12.50') }}
+    </div>
+  </div>
+  <div class="mb-3">{{ form.tags.label(class_='form-label') }}{{ form.tags(class_='form-control') }}</div>
+  <button class="btn btn-primary">Save</button>
+</form>
+<script>
+  ; (function () {
+    const form = document.querySelector('form');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      // clear previous messages
+      document.querySelectorAll('form .text-danger').forEach(n => { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      const cost = form.querySelector('input[name="cost"]');
+      if (cost && cost.value && isNaN(Number(cost.value))) {
+        const d = document.createElement('div'); d.className = 'text-danger'; d.textContent = 'Cost must be numeric.';
+        cost.insertAdjacentElement('afterend', d);
+        e.preventDefault();
+        return false;
+      }
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/itinerary.js') }}"></script>
+{% endblock %}

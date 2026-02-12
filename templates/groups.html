@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Groups - TripMates{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Groups</h2>
+  <a class="btn btn-success" href="{{ url_for('create_group') }}">Create Group</a>
+</div>
+
+<h5>Your Groups</h5>
+{% if my_groups %}
+<div class="list-group mb-3">
+  {% for g in my_groups %}
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <a href="{{ url_for('group_detail', group_id=g.id) }}" class="text-decoration-none flex-grow-1">
+      {{ g.name }}
+      {% if g.admin_id == current_user.id %}
+      <span class="badge bg-success ms-2">Admin</span>
+      {% endif %}
+    </a>
+    {% if g.admin_id == current_user.id %}
+    <form method="post" action="{{ url_for('delete_group', group_id=g.id) }}"
+      onsubmit="return confirm('Are you sure you want to delete this group? This action cannot be undone and will delete all associated trips, messages, and members.');"
+      class="ms-2">
+      <button type="submit" class="btn btn-sm btn-outline-danger">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p><em>You are not a member of any groups.</em></p>
+{% endif %}
+
+<h5>All Groups</h5>
+<div class="list-group">
+  {% for g in all_groups %}
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <a href="{{ url_for('group_detail', group_id=g.id) }}" class="text-decoration-none flex-grow-1">
+      {{ g.name }}
+      {% if g.admin_id == current_user.id %}
+      <span class="badge bg-success ms-2">Admin</span>
+      {% endif %}
+    </a>
+    {% if g.admin_id == current_user.id %}
+    <form method="post" action="{{ url_for('delete_group', group_id=g.id) }}"
+      onsubmit="return confirm('Are you sure you want to delete this group? This action cannot be undone and will delete all associated trips, messages, and members.');"
+      class="ms-2">
+      <button type="submit" class="btn btn-sm btn-outline-danger">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    </form>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

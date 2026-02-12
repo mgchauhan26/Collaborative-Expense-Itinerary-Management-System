@@ -1,0 +1,105 @@
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center"
+      href="{{ url_for('dashboard') if current_user.is_authenticated else url_for('home') }}">
+      <i class="fas fa-route me-2"></i>
+      TripMates
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu"
+      aria-controls="navmenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="tripsMenu" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fas fa-suitcase me-1"></i>
+            Trips
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="tripsMenu">
+            <li>
+              <a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-list me-2"></i>
+                My Trips
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ url_for('create_trip') }}">
+                <i class="fas fa-plus me-2"></i>
+                Create Trip
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="tooltip" title="Plan your daily activities">
+            <i class="fas fa-calendar-alt me-1"></i>
+            Itineraries
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('groups') }}" data-bs-toggle="tooltip" title="Manage your travel groups">
+            <i class="fas fa-users me-1"></i>
+            Groups
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="tooltip" title="Chat with group members">
+            <i class="fas fa-comments me-1"></i>
+            Chat
+          </a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        {% if current_user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fas fa-user-circle me-1"></i>
+            {{ current_user.name }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+            <li>
+              <a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-columns me-2"></i>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fas fa-cog me-2"></i>
+                Profile / Settings
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('login') }}">
+            <i class="fas fa-sign-in-alt me-1"></i>
+            Login
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-primary ms-2 px-3" href="{{ url_for('register') }}">
+            <i class="fas fa-user-plus me-1"></i>
+            Register
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

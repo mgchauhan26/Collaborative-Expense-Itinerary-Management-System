@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - TripMates{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h2>Register</h2>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.name.label(class_='form-label') }}
+        {{ form.name(class_='form-control', required=True) }}
+        {% for error in form.name.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.email.label(class_='form-label') }}
+        {# Render the email field with HTML5 attributes for client-side validation #}
+        {{ form.email(class_='form-control', placeholder='you@example.com',
+        pattern='^[a-z0-9][a-z0-9._-]*@[a-z0-9.-]+\.[a-z]{2,}$', title='Start with letter/number. Allowed before @:
+        letters, digits, underscore, dot, hyphen. Domain must include a dot and be lowercase.') }}
+        <div class="form-text">Email must be all lowercase; start with a letter or number; allowed characters before @:
+          letters, digits, underscore (_), dot (.), hyphen (-); domain must include at least one dot (e.g. example.com).
+        </div>
+        {% for error in form.email.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.password.label(class_='form-label') }}
+        {{ form.password(class_='form-control', required=True) }}
+        {% for error in form.password.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.confirm.label(class_='form-label') }}
+        {{ form.confirm(class_='form-control', required=True) }}
+        {% for error in form.confirm.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+      <button id="registerBtn" class="btn btn-primary">Register</button>
+    </form>
+    <div class="mt-3">
+      <p>Already have an account? <a href="{{ url_for('login', next=request.args.get('next')) }}">Login here</a></p>
+    </div>
+  </div>
+</div>
+<script>
+  // Client-side helper: force email lowercase and validate format before submitting.
+  ; (function () {
+    const form = document.currentScript && document.currentScript.previousElementSibling ? document.currentScript.previousElementSibling : document.querySelector('form[method="post"]');
+    if (!form) return;
+    const emailInput = form.querySelector('input[type="email"], input[name="email"]');
+    if (!emailInput) return;
+
+    // create a visible inline message element for JS validation feedback
+    let jsMsg = document.createElement('div');
+    jsMsg.className = 'text-danger mt-1';
+    emailInput.insertAdjacentElement('afterend', jsMsg);
+
+    // Force lowercase on blur/input
+    emailInput.addEventListener('input', e => {
+      if (e.target.value) {
+        // keep caret behaviour acceptable by only replacing when uppercase present
+        const lower = e.target.value.toLowerCase();
+        if (e.target.value !== lower) e.target.value = lower;
+      }
+    });
+
+    // Validate on submit and show browser validation messages
+    form.addEventListener('submit', function (e) {
+      // ensure value is lowercase before validation
+      if (emailInput.value) emailInput.value = emailInput.value.toLowerCase();
+      // use stricter JS regex to mirror backend rules
+      const re = /^[a-z0-9][a-z0-9._-]*@[a-z0-9.-]+\.[a-z]{2,}$/;
+      const val = (emailInput.value || '').trim();
+      if (!val) {
+        jsMsg.textContent = 'Email is required.';
+        emailInput.focus();
+        e.preventDefault();
+        return false;
+      }
+      if (/[A-Z]/.test(val)) {
+        jsMsg.textContent = 'Email must be lowercase only.';
+        emailInput.focus();
+        e.preventDefault();
+        return false;
+      }
+      if (!re.test(val)) {
+        jsMsg.textContent = 'Enter a valid email: start with a letter/number; allowed before @: letters, digits, underscore, dot, hyphen; domain must include a dot.';
+        emailInput.focus();
+        e.preventDefault();
+        return false;
+      }
+      // clear message on success
+      jsMsg.textContent = '';
+      return true;
+    });
+  })();
+</script>
+{% endblock %}

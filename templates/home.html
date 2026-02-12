@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to TripMates{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="row align-items-center justify-content-center" style="min-height: 90vh;">
+  <div class="col-lg-10 text-center">
+    <!-- Main Branding -->
+    <div class="mb-5">
+      <h1 class="display-1 fw-bold text-primary mb-0 d-flex align-items-center justify-content-center">
+        <i class="fas fa-route me-4"></i>TripMates
+      </h1>
+      <p class="fs-4 text-muted mt-2">Plan together. Travel smarter. Split easier.</p>
+    </div>
+
+    <!-- Sub-heading -->
+    <div class="col-md-8 mx-auto mb-5">
+      <p class="fs-5 text-secondary">
+        Your all-in-one platform for collaborative travel planning,<br>
+        itinerary management, and seamless expense splitting.
+      </p>
+    </div>
+
+    <!-- Feature Group -->
+    <div class="row g-4 justify-content-center mb-5">
+      <div class="col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm p-3">
+          <div class="card-body px-1">
+            <i class="fas fa-calendar-check fa-4x text-primary mb-4"></i>
+            <h4 class="fw-bold">Plan Trips</h4>
+            <p class="text-muted small mb-0">Create detailed itineraries with your group</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm p-3">
+          <div class="card-body px-1">
+            <div class="currency-icon-wrapper mb-4">
+              <span class="display-4 fw-bold text-success">₹</span>
+            </div>
+            <h4 class="fw-bold">Split Expenses</h4>
+            <p class="text-muted small mb-0">Track and settle group expenses effortlessly</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-3">
+        <div class="card h-100 border-0 shadow-sm p-3">
+          <div class="card-body px-1">
+            <i class="fas fa-comments fa-4x text-info mb-4"></i>
+            <h4 class="fw-bold text-nowrap">Stay Connected</h4>
+            <p class="text-muted small mb-0">Real-time chat with your travel companions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-5">
+      <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-5 py-3 fs-5 fw-bold shadow-sm">
+        <i class="fas fa-user-plus me-2"></i>Get Started
+      </a>
+      <a href="{{ url_for('login') }}" class="btn btn-light btn-lg px-5 py-3 fs-5 border shadow-sm">
+        <i class="fas fa-sign-in-alt me-2"></i>Login
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 220px;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .currency-icon-wrapper {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .display-1 {
+    letter-spacing: -2px;
+    font-size: 6rem;
+  }
+
+  .text-nowrap {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .display-1 {
+      font-size: 4rem;
+    }
+  }
+</style>
+{% endblock %}

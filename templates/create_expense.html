@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Expense - {{ trip.title }} - TripMates{% endblock %}
+
+{% block content %}
+<h3>{{ 'Edit' if form.title.data else 'Create' }} Expense — {{ trip.title }}</h3>
+<form method="post" id="expenseForm">
+  {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
+  <div class="mb-3">
+    {{ form.title.label(class_='form-label') }}
+    {{ form.title(class_='form-control', required=True, minlength='1') }}
+    {% for error in form.title.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.amount.label(class_='form-label') }}
+    <div class="input-group">
+      <span class="input-group-text">₹</span>
+      {{ form.amount(class_='form-control', placeholder='e.g. 500.00', required=True) }}
+    </div>
+    {% for error in form.amount.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+    <div class="form-text">Enter numeric amount in Indian Rupees, e.g. 500.00</div>
+  </div>
+  <div class="mb-3">
+    {{ form.payer.label(class_='form-label') }}
+    {{ form.payer(class_='form-select') }}
+    <div class="form-text">Select the user who paid for this expense.</div>
+  </div>
+  <div class="mb-3">
+    {{ form.participants.label(class_='form-label') }}
+    {{ form.participants(class_='form-select', multiple=True, size=5, style='min-height: 120px;') }}
+    <div class="form-text">
+      <i class="fas fa-info-circle me-1"></i>
+      <strong>Hold Ctrl (or Cmd on Mac)</strong> to select multiple participants. These are the people who will share
+      the cost of this expense.
+    </div>
+    {% for error in form.participants.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.notes.label(class_='form-label') }}
+    {{ form.notes(class_='form-control', maxlength='500') }}
+    {% for error in form.notes.errors %}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+  </div>
+  <button class="btn btn-primary" type="submit">Save</button>
+  <a class="btn btn-secondary" href="{{ url_for('trip_expenses', trip_id=trip.id) }}">Cancel</a>
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('expenseForm');
+    if (!form) return;
+
+    const amountInput = form.querySelector('input[name="amount"]');
+    const participantsSelect = form.querySelector('select[name="participants"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Validate amount on input
+    if (amountInput) {
+      amountInput.addEventListener('input', function () {
+        const value = this.value.trim();
+        if (value && !isNaN(Number(value)) && Number(value) > 0) {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        } else if (value) {
+          this.classList.remove('is-valid');
+          this.classList.add('is-invalid');
+        }
+      });
+    }
+
+    // Form submission handler
+    form.addEventListener('submit', function (e) {
+      let isValid = true;
+
+      // Clear previous error messages
+      form.querySelectorAll('.text-danger').forEach(el => {
+        if (el.parentNode && el.classList.contains('text-danger') && !el.closest('.form-text')) {
+          el.parentNode.removeChild(el);
+        }
+      });
+      form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+      // Validate amount
+      if (amountInput) {
+        const value = (amountInput.value || '').trim();
+        if (!value || isNaN(Number(value)) || Number(value) <= 0) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'text-danger mt-1';
+          errorDiv.textContent = 'Please enter a valid amount greater than 0';
+          amountInput.parentNode.appendChild(errorDiv);
+          amountInput.classList.add('is-invalid');
+          isValid = false;
+        }
+      }
+
+      // Validate title
+      const titleInput = form.querySelector('input[name="title"]');
+      if (titleInput) {
+        const value = (titleInput.value || '').trim();
+        if (!value || value.length < 1) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'text-danger mt-1';
+          errorDiv.textContent = 'Title is required';
+          titleInput.parentNode.appendChild(errorDiv);
+          titleInput.classList.add('is-invalid');
+          isValid = false;
+        }
+      }
+
+      // Validate payer
+      const payerSelect = form.querySelector('select[name="payer"]');
+      if (payerSelect && !payerSelect.value) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'text-danger mt-1';
+        errorDiv.textContent = 'Please select a payer';
+        payerSelect.parentNode.appendChild(errorDiv);
+        payerSelect.classList.add('is-invalid');
+        isValid = false;
+      }
+
+      if (!isValid) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Disable submit button to prevent double submission
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...';
+      }
+    });
+
+    // Show selected participants count
+    if (participantsSelect) {
+      function updateParticipantsInfo() {
+        const selected = participantsSelect.selectedOptions.length;
+        let infoDiv = document.getElementById('participantsInfo');
+        if (!infoDiv) {
+          infoDiv = document.createElement('div');
+          infoDiv.id = 'participantsInfo';
+          infoDiv.className = 'form-text mt-1';
+          participantsSelect.parentNode.appendChild(infoDiv);
+        }
+        if (selected > 0) {
+          infoDiv.innerHTML = `<i class="fas fa-check-circle text-success me-1"></i>${selected} participant(s) selected`;
+        } else {
+          infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i>No participants selected (expense will be split among selected participants)';
+        }
+      }
+
+      participantsSelect.addEventListener('change', updateParticipantsInfo);
+      updateParticipantsInfo();
+    }
+  });
+</script>
+{% endblock %}

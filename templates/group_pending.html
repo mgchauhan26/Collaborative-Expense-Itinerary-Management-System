@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Pending - {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card shadow-sm border-0 p-4">
+            <div class="mb-4 text-warning">
+                <i class="fas fa-clock fa-4x"></i>
+            </div>
+            <h2>Request Sent! 📩</h2>
+            <p class="lead">Your request to join <strong>{{ group.name }}</strong> is awaiting admin approval.</p>
+            <p class="text-muted small">You'll be able to access the chat and trips once the group admin approves your
+                request. Please check back later!</p>
+
+            <div class="mt-4">
+                <a href="{{ url_for('groups') }}" class="btn btn-primary d-block mb-2">Back to Groups</a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary d-block">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
