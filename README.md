@@ -4,6 +4,9 @@
 
 TripMates is a modern, full-featured web application designed to make group travel planning effortless. From creating detailed itineraries to managing shared expenses and staying connected through real-time chat, TripMates is your all-in-one companion for stress-free group adventures.
 
+![Landing Page](assets/screenshots/landing_page.png)
+
+
 ---
 
 ## ✨ Features
@@ -14,11 +17,17 @@ TripMates is a modern, full-featured web application designed to make group trav
 - View all itinerary days simultaneously for a complete overview
 - Optional time fields for flexible planning
 
+![Smart Trip Planning](assets/screenshots/itinerary.png)
+
+
 ### 💰 **Expense Management**
 - Log group expenses with automatic splitting
 - Track who paid and who owes
 - Automated settlement calculations using optimized algorithms
 - Detailed expense history per trip
+
+![Seamless Expense Splitting](assets/screenshots/expenses.png)
+
 
 ### 👥 **Group Collaboration**
 - Create private groups with secure invite links
@@ -26,12 +35,17 @@ TripMates is a modern, full-featured web application designed to make group trav
 - Join request approval system for enhanced privacy
 - Regenerate invite links for security
 
-### 💬 **Real-Time Chat**
-- Integrated group chat interface
+![Group Management](assets/screenshots/group_members.png)
+
+
+### 💬 **Integrated Chat**
+- Modern messaging interface with bubbles, emojis, and smooth scrolling
 - Live message delivery with Socket.IO
 - Emoji picker for expressive communication
-- File sharing capabilities
 - Chronological message ordering with accurate timestamps
+
+![Integrated Group Chat](assets/screenshots/chat.png)
+
 
 ### 🔐 **Security & Privacy**
 - User authentication with secure password hashing
