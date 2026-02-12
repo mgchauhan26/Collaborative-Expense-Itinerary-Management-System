@@ -6,6 +6,14 @@ TripMates is a modern, full-featured web application designed to make group trav
 
 ![Landing Page](assets/screenshots/landing_page.png)
 
+### 📊 **Personal Dashboard**
+- View upcoming, ongoing, and completed trips at a glance
+- Quick access to joined groups and recent trips
+- Helpful tips for new users
+
+![User Dashboard](assets/screenshots/dashboard.png)
+
+
 
 ---
 
